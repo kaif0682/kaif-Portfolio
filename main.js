@@ -103,60 +103,113 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial check for skill bars
     animateSkillBars();
     
-    // Contact form handling
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+    // // Contact form handling
+    // const contactForm = document.getElementById('contact-form');
+    // if (contactForm) {
+    //     contactForm.addEventListener('submit', function(e) {
+    //         e.preventDefault();
             
-            // Get form data
-            const formData = new FormData(contactForm);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const subject = formData.get('subject');
-            const message = formData.get('message');
+    //         // Get form data
+    //         const formData = new FormData(contactForm);
+    //         const name = formData.get('name');
+    //         const email = formData.get('email');
+    //         const subject = formData.get('subject');
+    //         const message = formData.get('message');
             
-            // Basic validation
-            if (!name || !email || !subject || !message) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
+    //         // Basic validation
+    //         if (!name || !email || !subject || !message) {
+    //             showNotification('Please fill in all fields', 'error');
+    //             return;
+    //         }
             
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address', 'error');
-                return;
-            }
+    //         if (!isValidEmail(email)) {
+    //             showNotification('Please enter a valid email address', 'error');
+    //             return;
+    //         }
             
-            // Simulate form submission (replace with actual form handling)
-            showNotification('Thank you for your message! I\'ll get back to you soon.', 'success');
-            contactForm.reset();
+    //         // Simulate form submission (replace with actual form handling)
+    //         showNotification('Thank you for your message! I\'ll get back to you soon.', 'success');
+    //         contactForm.reset();
             
-            // In a real implementation, you would send the form data to your server
-            // Example:
-            // fetch('/api/contact', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({ name, email, subject, message })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     showNotification('Message sent successfully!', 'success');
-            //     contactForm.reset();
-            // })
-            // .catch(error => {
-            //     showNotification('Failed to send message. Please try again.', 'error');
-            // });
-        });
-    }
+    //         // In a real implementation, you would send the form data to your server
+    //         // Example:
+    //         // fetch('/api/contact', {
+    //         //     method: 'POST',
+    //         //     headers: {
+    //         //         'Content-Type': 'application/json',
+    //         //     },
+    //         //     body: JSON.stringify({ name, email, subject, message })
+    //         // })
+    //         // .then(response => response.json())
+    //         // .then(data => {
+    //         //     showNotification('Message sent successfully!', 'success');
+    //         //     contactForm.reset();
+    //         // })
+    //         // .catch(error => {
+    //         //     showNotification('Failed to send message. Please try again.', 'error');
+    //         // });
+    //     });
+    // }
     
-    // Email validation function
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
+    // // Email validation function
+    // function isValidEmail(email) {
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     return emailRegex.test(email);
+    // }
+// ==============================
+// Contact Form + Formspree
+// ==============================
+
+const contactForm = document.getElementById('contact-form');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(contactForm);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const subject = formData.get('subject');
+        const message = formData.get('message');
+
+        // Validation
+        if (!name || !email || !subject || !message) {
+            showNotification('Please fill in all fields', 'error');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showNotification('Please enter a valid email address', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch("https://formspree.io/f/mnjbrwjl", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    Accept: "application/json"
+                }
+            });
+
+            if (response.ok) {
+                showNotification('Message sent successfully ✅', 'success');
+                contactForm.reset();
+            } else {
+                showNotification('Something went wrong ❌', 'error');
+            }
+
+        } catch (error) {
+            showNotification('Network error ❌', 'error');
+        }
+    });
+}
+
+// Email validation
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
     // Notification system
     function showNotification(message, type = 'info') {
         // Remove existing notifications
