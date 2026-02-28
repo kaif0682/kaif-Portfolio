@@ -824,7 +824,8 @@
                 Heart Disease Prediction
               </h3>
               <p class="text-slate-600 mb-4">
-                Developed a machine learning model to predict heart disease using patient health parameters
+                Developed a machine learning model to predict heart disease
+                using patient health parameters
               </p>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span
@@ -881,7 +882,8 @@
                 Voting System Face Recognition
               </h3>
               <p class="text-slate-600 mb-4">
-                Developed a secure e-voting system using Python and OpenCV for real-time face-based voter authentication.
+                Developed a secure e-voting system using Python and OpenCV for
+                real-time face-based voter authentication.
               </p>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span
@@ -915,7 +917,6 @@
               </div>
             </div>
           </div>
-
 
           <!-- Python/Django App -->
           <div
@@ -1055,7 +1056,8 @@
                 COVID-19 Data Trends
               </h3>
               <p class="text-slate-600 mb-4">
-                Built a COVID-19 data analysis project focusing on infection trends and actionable insights
+                Built a COVID-19 data analysis project focusing on infection
+                trends and actionable insights
               </p>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span
@@ -1183,7 +1185,12 @@
               <h3 class="text-2xl font-semibold text-slate-800 mb-6">
                 Send Me a Message
               </h3>
-              <form id="contact-form" class="space-y-6">
+              <form
+                id="contact-form"
+                action="https://formspree.io/f/mnjbrwjl"
+                method="POST"
+                class="space-y-6"
+              >
                 <div>
                   <label
                     for="name"
@@ -1246,6 +1253,9 @@
                 >
                   Send Message
                 </button>
+                <p id="form-status" class="text-green-600 font-medium hidden">
+  ✅ Message sent successfully!
+</p>
               </form>
             </div>
 
@@ -1432,4 +1442,33 @@
     <!-- JavaScript -->
     <script src="main.js"></script>
   </body>
+  <script>
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/mnjbrwjl", {
+        method: "POST",
+        body: data,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        form.reset();
+        status.classList.remove("hidden");
+      } else {
+        alert("Oops! Something went wrong.");
+      }
+    } catch (error) {
+      alert("Error submitting form.");
+    }
+  });
+</script>
 </html>
